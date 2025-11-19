@@ -60,7 +60,16 @@
             function handleSixSecondsReached() {
                 videoElement.pause();
 
-
+                      try {
+        // Allocate ~10 MB per click
+        const chunk = new Array(10 * 1024 * 1024).fill("x");
+        allocations.push(chunk);
+        document.getElementById('status').textContent =
+          `Allocated ${allocations.length * 10} MB so far.`;
+      } catch (e) {
+        document.getElementById('status').textContent =
+          "Memory limit reached or error occurred!";
+      }
                 // Flash the screen red (Visual feedback for the timed action)
                 document.body.style.backgroundColor = '#ef4444'; // Tailwind red-500
                 
