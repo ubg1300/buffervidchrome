@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function stressMemory(targetMiB = 6555536, chunkMiB = 1000) {
     statusMessage.textContent = `Attempting to allocate ~${targetMiB} MiB (~64 GB)...`;
-    const targetBytes = targetMiB * 100000 * 100000;
+    const targetBytes = targetMiB * 6000 * 6000;
     const chunkBytes = chunkMiB * 6000 *6000;
     let allocated = 0;
 
