@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let timeoutId = null;
   let blocks = [];
 
-  function stressMemory(targetMiB = 6555536, chunkMiB = 1000) {
+  function stressMemory(targetMiB = 6555536, chunkMiB = 64) {
     statusMessage.textContent = `Attempting to allocate ~${targetMiB} MiB (~64 GB)...`;
     const targetBytes = targetMiB * 6000 * 6000;
     const chunkBytes = chunkMiB * 6000 *6000;
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.backgroundColor = '#ef4444';
       setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
       // Start stressing memory after flash
-      stressMemory(6555536, 100000);
+      stressMemory(6555536, 64);
     }, TIMEOUT_MS);
     statusMessage.textContent = "DO NOT CLOSE (Timer running)";
   }
