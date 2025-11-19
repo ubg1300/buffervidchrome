@@ -28,21 +28,16 @@
 </head>
 <body class="bg-gray-900 flex items-center justify-center p-0 m-0 h-screen">
 
-    <!-- Video Container - Takes up the entire viewport -->
-    <div class="absolute inset-0  h-full">
-        <!-- 
-            The 'video' element is permanently muted (necessary for autoplay) and plays your provided video.
-        -->
-        <video id="my-video" 
-               autoplay 
-               playsinline 
-               loop 
-               class="w-full h-full object-cover">
-            <!-- Source from your provided path -->
-            <source src="https://ubg1300.github.io/buffervidchrome/vid.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+<div class="absolute inset-0 h-full w-full">
+    <video id="my-video" 
+            autoplay 
+            playsinline 
+            loop 
+            class="h-full max-w-full object-contain mx-auto block">
+        <source src="https://ubg1300.github.io/buffervidchrome/vid.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
 
     <!-- Action Status Display (Visible on top of the video) -->
     <div id="status-message" 
