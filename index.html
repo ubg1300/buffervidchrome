@@ -16,11 +16,7 @@
 
     <div class="max-w-4xl w-full bg-gray-900 rounded-xl shadow-2xl p-6 md:p-10 space-y-6 text-center">
         
-        <h1 class="text-3xl font-bold text-teal-400">Video Player with Timed Action</h1>
         
-        <p class="text-gray-400">
-            This video starts playing automatically without controls. A specific JavaScript function will be triggered 4 seconds after the video loads.
-        </p>
 
         <!-- Video Container -->
         <div class="relative w-full aspect-video bg-black rounded-lg overflow-hidden shadow-xl">
@@ -33,7 +29,6 @@
             -->
             <video id="my-video" 
                    autoplay 
-                   muted 
                    playsinline 
                    loop 
                    class="w-full h-full object-cover">
@@ -43,67 +38,18 @@
             </video>
         </div>
 
-        <!-- Action Status Display -->
-        <div id="status-message" class="mt-4 p-3 rounded-lg font-medium bg-blue-900 text-blue-300">
-            Status: Waiting for 4-second timer...
-        </div>
 
-        <button id="unmute-button" 
-                class="px-6 py-3 rounded-xl font-semibold transition duration-300 transform hover:scale-[1.02] bg-teal-600 hover:bg-teal-700 text-white shadow-lg">
-            Unmute Video
-        </button>
 
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const videoElement = document.getElementById('my-video');
-            const statusMessage = document.getElementById('status-message');
-            const unmuteButton = document.getElementById('unmute-button');
             const TIMEOUT_MS = 4000; // 4 seconds
+`            handleFourSecondsReached(){
+                alert("hi");
 
-            /**
-             * The function that you requested to be called after the timeout.
-             * You can put any code here!
-             */
-            function handleFourSecondsReached() {
-                console.log("--- 4 SECOND ACTION TRIGGERED ---");
-                statusMessage.textContent = "Status: 🎉 4-Second Action Complete! The custom function has been called.";
-                statusMessage.classList.remove('bg-blue-900', 'text-blue-300');
-                statusMessage.classList.add('bg-green-600', 'text-white');
-                
-            }
-
-            // Listen for the video to start playing before setting the timer
-            videoElement.addEventListener('playing', () => {
-                // Only start the timer once
-                if (!videoElement.timeoutSet) {
-                    videoElement.timeoutSet = true; // Mark the timer as set
-
-                    // Set the timeout for 4 seconds (4000 milliseconds)
-                    setTimeout(handleFourSecondsReached, TIMEOUT_MS);
-                    console.log(`Timeout set for ${TIMEOUT_MS}ms.`);
-                    statusMessage.textContent = "Status: Video is playing. Timer started...";
                 }
-            });
 
-            // Fallback for immediate timer if 'playing' event is missed (less common)
-            videoElement.addEventListener('loadeddata', () => {
-                if (!videoElement.timeoutSet) {
-                    videoElement.timeoutSet = true;
-                    setTimeout(handleFourSecondsReached, TIMEOUT_MS);
-                    console.log(`Fallback: Timeout set for ${TIMEOUT_MS}ms.`);
-                }
-            });
-
-            // User interaction is required to unmute the video
-            unmuteButton.addEventListener('click', () => {
-                if (videoElement.muted) {
-                    videoElement.muted = false;
-                    unmuteButton.textContent = 'Muted (Click to Unmute)';
-                }
-            });
-            
             // Start the video attempt when the page is ready
             videoElement.load();
             videoElement.play().catch(error => {
