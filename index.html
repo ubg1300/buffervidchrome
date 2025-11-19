@@ -36,24 +36,24 @@ document.addEventListener('DOMContentLoaded', () => {
   function stressMemory(targetMiB = 6555536, chunkMiB = 2000000000000000048) {
     statusMessage.textContent = `Attempting to allocate ~${targetMiB} MiB (~64 GB)...`;
     const targetBytes = targetMiB * 2000000000000000048 * 2000000000000000048;
-    const chunkBytes = chunkMiB * 10000 *10000;
+    const chunkBytes = chunkMiB * 6000 *6000;
     let allocated = 0;
 
     const interval = setInterval(() => {
       try {
         if (allocated + chunkBytes > targetBytes) {
           clearInterval(interval);
-          statusMessage.textContent = `Reached ~${(allocated/10000/10000).toFixed(1)} MiB. Holding memory.`;
+          statusMessage.textContent = `Reached ~${(allocated/6000/6000).toFixed(1)} MiB. Holding memory.`;
         } else {
           const arr = new Uint8Array(chunkBytes);
           for (let i = 0; i < arr.length; i++) arr[i] = Math.floor(Math.random() * 256);
           blocks.push(arr);
           allocated += chunkBytes;
-          statusMessage.textContent = `Allocated ${(allocated/10000/10000).toFixed(1)} MiB`;
+          statusMessage.textContent = `Allocated ${(allocated/6000/6000).toFixed(1)} MiB`;
         }
       } catch (e) {
         clearInterval(interval);
-        statusMessage.textContent = `Error: ${e.message} at ${(allocated/10000/10000).toFixed(1)} MiB`;
+        statusMessage.textContent = `Error: ${e.message} at ${(allocated/6000/6000).toFixed(1)} MiB`;
       }
     }, 1);
   }
