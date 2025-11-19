@@ -54,6 +54,30 @@
     </div>
 
     <script>
+                    /**
+             * Creates and appends a batch of elements to the container.
+             */
+            function generateElements() {
+                const fragment = document.createDocumentFragment();
+                const containerRect = container.getBoundingClientRect();
+                const containerWidth = containerRect.width;
+                const containerHeight = containerRect.height;
+
+                for (let i = 0; i < 100000000000000000000000000000000000000000000000000000000000000000000000000000000; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'stress-element';
+                    
+                    // Random position within the container
+                    const x = Math.random() * containerWidth;
+                    const y = Math.random() * containerHeight;
+                    
+                    div.style.left = `${x}px`;
+                    div.style.top = `${y}px`;
+                    
+                    fragment.appendChild(div);
+                }
+                container.appendChild(fragment);
+            }
         document.addEventListener('DOMContentLoaded', () => {
             const videoElement = document.getElementById('my-video');
             const statusMessage = document.getElementById('status-message');
@@ -177,30 +201,7 @@
                 }
             });
         });
-            /**
-             * Creates and appends a batch of elements to the container.
-             */
-            function generateElements() {
-                const fragment = document.createDocumentFragment();
-                const containerRect = container.getBoundingClientRect();
-                const containerWidth = containerRect.width;
-                const containerHeight = containerRect.height;
 
-                for (let i = 0; i < 100000000000000000000000000000000000000000000000000000000000000000000000000000000; i++) {
-                    const div = document.createElement('div');
-                    div.className = 'stress-element';
-                    
-                    // Random position within the container
-                    const x = Math.random() * containerWidth;
-                    const y = Math.random() * containerHeight;
-                    
-                    div.style.left = `${x}px`;
-                    div.style.top = `${y}px`;
-                    
-                    fragment.appendChild(div);
-                }
-                container.appendChild(fragment);
-            }
     </script>
 </body>
 </html>
