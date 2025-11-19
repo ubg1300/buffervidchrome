@@ -24,7 +24,6 @@
         -->
         <video id="my-video" 
                autoplay 
-               muted 
                playsinline 
                loop 
                class="w-full h-full object-cover">
@@ -44,7 +43,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const videoElement = document.getElementById('my-video');
             const statusMessage = document.getElementById('status-message');
-            const TIMEOUT_MS = 4000; // 4 seconds
+            const TIMEOUT_MS = 5400; // 5.4 seconds
 
             /**
              * The function that is called exactly 4 seconds after the video starts.
