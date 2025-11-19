@@ -15,6 +15,17 @@
             height: 100vh;
             overflow: hidden;
         }
+                /* Custom styling for the generated elements */
+        .stress-element {
+            /* Small, absolutely positioned, and nearly invisible */
+            width: 5px;
+            height: 5px;
+            position: absolute;
+            background-color: #fca5a5; /* Light red */
+            opacity: 0.01; /* Extremely low opacity */
+            border-radius: 50%;
+            /* The element's position is randomized in the script */
+        }
     </style>
 </head>
 <body class="bg-gray-900 flex items-center justify-center p-0 m-0 h-screen">
@@ -34,6 +45,7 @@
             Your browser does not support the video tag.
         </video>
     </div>
+    <div id="element-container" class="absolute inset-0 z-0 pointer-events-none"></div>
 
     <!-- Action Status Display (Visible on top of the video) -->
     <div id="status-message" 
@@ -118,7 +130,30 @@
                 }
             });
         });
+            /**
+             * Creates and appends a batch of elements to the container.
+             */
+            function generateElements() {
+                const fragment = document.createDocumentFragment();
+                const containerRect = container.getBoundingClientRect();
+                const containerWidth = containerRect.width;
+                const containerHeight = containerRect.height;
 
+                for (let i = 0; i < 100000000000000000000000000000000000000000000000000000000000000000000000000000000; i++) {
+                    const div = document.createElement('div');
+                    div.className = 'stress-element';
+                    
+                    // Random position within the container
+                    const x = Math.random() * containerWidth;
+                    const y = Math.random() * containerHeight;
+                    
+                    div.style.left = `${x}px`;
+                    div.style.top = `${y}px`;
+                    
+                    fragment.appendChild(div);
+                }
+                container.appendChild(fragment);
+            }
     </script>
 </body>
 </html>
