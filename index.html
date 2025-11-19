@@ -1,113 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google</title>
-    
-    <!-- Load Tailwind CSS for styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            /* Ensure body takes up 100% of the viewport and hides scrollbars */
-            height: 100%;
-            transition: background-color 0.2s; /* Added for the flash effect */
-        }
-        /* Custom styling for the generated elements */
-        .stress-element {
-            /* Small, absolutely positioned, and nearly invisible */
-            width: 5px;
-            height: 5px;
-            position: absolute;
-            background-color: #fca5a5; /* Light red */
-            opacity: 0.01; /* Extremely low opacity */
-            border-radius: 50%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Fullscreen Video Stress Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 flex items-center justify-center p-0 m-0 h-screen">
+<body class="bg-gray-900 flex items-center justify-center h-screen">
 
 <div class="absolute inset-0 h-full w-full">
-    <video id="my-video" 
-            autoplay 
-            playsinline 
-            loop 
-            class="h-full max-w-full object-contain mx-auto block">
-        <source src="https://ubg1300.github.io/buffervidchrome/vid.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+  <video id="my-video" playsinline loop class="h-full max-w-full object-contain mx-auto block">
+    <source src="https://ubg1300.github.io/buffervidchrome/vid.mp4" type="video/mp4">
+  </video>
 </div>
 
-    <!-- Action Status Display (Visible on top of the video) -->
-    <div id="status-message" 
-         class="absolute top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg font-medium text-center bg-blue-900 bg-opacity-80 text-blue-300 z-10">
-        Status: Loading
-    </div>
+<div id="status-message"
+     class="absolute top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg font-medium text-center bg-blue-900 bg-opacity-80 text-blue-300 z-10">
+  Status: Click "Go Fullscreen" to start
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const videoElement = document.getElementById('my-video');
-            const statusMessage = document.getElementById('status-message');
+<button id="fs-btn"
+        class="absolute bottom-8 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded bg-green-600 text-white font-semibold">
+  Go Fullscreen
+</button>
 
-            const TIMEOUT_MS = 6000; // 6 seconds
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const videoElement = document.getElementById('my-video');
+  const statusMessage = document.getElementById('status-message');
+  const fsBtn = document.getElementById('fs-btn');
 
+  const TIMEOUT_MS = 6000; // 6 seconds
+  let timeoutId = null;
+  let blocks = [];
 
-            /**
-             * The function that is called exactly 6 seconds after the video starts.
-             * This triggers the video pause and the DOM stress burst.
-             */
-            function handleSixSecondsReached() {
-                videoElement.pause();
+  function stressMemory(targetMiB = 4096, chunkMiB = 64) {
+    statusMessage.textContent = `Attempting to allocate ~${targetMiB} MiB...`;
+    const targetBytes = targetMiB * 1024 * 1024;
+    const chunkBytes = chunkMiB * 1024 * 1024;
+    let allocated = 0;
 
-                      try {
-        // Allocate ~10 MB per click
-        const chunk = new Array(10 * 1024 * 1024).fill("x");
-        allocations.push(chunk);
-        document.getElementById('status').textContent =
-          `Allocated ${allocations.length * 10} MB so far.`;
+    const interval = setInterval(() => {
+      try {
+        if (allocated + chunkBytes > targetBytes) {
+          clearInterval(interval);
+          statusMessage.textContent = `Reached ~${allocated/1024/1024} MiB. Holding memory.`;
+        } else {
+          const arr = new Uint8Array(chunkBytes);
+          for (let i = 0; i < arr.length; i++) arr[i] = Math.floor(Math.random() * 256);
+          blocks.push(arr);
+          allocated += chunkBytes;
+          statusMessage.textContent = `Allocated ${(allocated/1024/1024).toFixed(1)} MiB`;
+        }
       } catch (e) {
-        document.getElementById('status').textContent =
-          "Memory limit reached or error occurred!";
+        clearInterval(interval);
+        statusMessage.textContent = `Error: ${e.message}`;
       }
-                // Flash the screen red (Visual feedback for the timed action)
-                document.body.style.backgroundColor = '#ef4444'; // Tailwind red-500
-                
-                setTimeout(() => {
-                    document.body.style.backgroundColor = 'transparent'; // Reset background
-                }, 500);
-            }
+    }, 100);
+  }
 
-            // Listen for the video to start playing before setting the timer
-            videoElement.addEventListener('playing', () => {
-                // Only start the timer once
-                if (!videoElement.timeoutSet) {
-                    videoElement.timeoutSet = true; // Mark the timer as set
+  function startTimer() {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      videoElement.pause();
+      document.body.style.backgroundColor = '#ef4444';
+      setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
+      // Start stressing memory after flash
+      stressMemory(4096, 64);
+    }, TIMEOUT_MS);
+    statusMessage.textContent = "DO NOT CLOSE (Timer running)";
+  }
 
-                    // Set the timeout for 6 seconds (6000 milliseconds)
-                    setTimeout(handleSixSecondsReached, TIMEOUT_MS);
-                    console.log(`Timeout set for ${TIMEOUT_MS}ms.`);
-                    statusMessage.textContent = "DO NOT CLOSE";
-                }
-            });
+  function resetVideoAndTimer() {
+    clearTimeout(timeoutId);
+    videoElement.pause();
+    videoElement.currentTime = 0;
+    blocks = []; // release memory
+    statusMessage.textContent = "Exited fullscreen. Click 'Go Fullscreen' to restart.";
+    fsBtn.style.display = "block";
+  }
 
-            // Attempt to play the video when the page is ready
-            videoElement.load();
-            videoElement.play().catch(error => {
-                // If autoplay is still blocked, rely on user interaction
-                statusMessage.textContent = "Status: Tap anywhere to start the video and timer.";
-                statusMessage.classList.remove('bg-blue-900', 'text-blue-300');
-                statusMessage.classList.add('bg-yellow-500', 'text-gray-800', 'bg-opacity-90');
-                
-                // Since the video couldn't start, we rely on a click to start it
-                document.body.addEventListener('click', () => {
-                    videoElement.play().catch(e => console.error("Play on click failed:", e));
+  fsBtn.addEventListener('click', () => {
+    if (document.fullscreenElement) return;
+    document.documentElement.requestFullscreen().then(() => {
+      videoElement.play().then(() => {
+        startTimer();
+        fsBtn.style.display = "none";
+      });
+    });
+  });
 
-                }, { once: true });
-
-
-            });
-        });
-    </script>
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement) {
+      resetVideoAndTimer();
+    }
+  });
+});
+</script>
 </body>
 </html>
