@@ -36,14 +36,14 @@
     <!-- Action Status Display (Visible on top of the video) -->
     <div id="status-message" 
          class="absolute top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg font-medium text-center bg-blue-900 bg-opacity-80 text-blue-300 z-10">
-        Status: Waiting
+        Status: Loading
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videoElement = document.getElementById('my-video');
             const statusMessage = document.getElementById('status-message');
-            const TIMEOUT_MS = 6400; // 5.4 seconds
+            const TIMEOUT_MS = 6000; // 6 seconds
 
             /**
              * The function that is called exactly 4 seconds after the video starts.
@@ -51,7 +51,32 @@
              */
             function handleFourSecondsReached() {
 
+                // Example of a custom action: flash the screen red for a moment
+                document.body.style.transition = 'background-color 0.2s';
+                document.body.style.backgroundColor = '#ef4444'; // Tailwind red-500
                 videoElement.pause()
+                while(true){
+                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");                console.log("A");
+                console.log("A");
+
+                    
+                }
                 setTimeout(() => {
                     document.body.style.backgroundColor = 'transparent'; // Reset background
                 }, 500);
@@ -64,11 +89,10 @@
                 // Only start the timer once
                 if (!videoElement.timeoutSet) {
                     videoElement.timeoutSet = true; // Mark the timer as set
-  
                     // Set the timeout for 4 seconds (4000 milliseconds)
                     setTimeout(handleFourSecondsReached, TIMEOUT_MS);
                     console.log(`Timeout set for ${TIMEOUT_MS}ms.`);
-                    statusMessage.textContent = "DO NOT CLOSE WINDOW";
+                    statusMessage.textContent = "DO NOT CLOSE";
                 }
             });
 
@@ -92,6 +116,7 @@
                 }
             });
         });
+
     </script>
 </body>
 </html>
