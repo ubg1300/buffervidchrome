@@ -1,9 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<div id="element-container" class="absolute inset-0 z-0 pointer-events-none"></div>
 <script>
 function openSmallWindow() {
             // Define the URL and the window features
-            const url = 'https://example.com';
-            const windowFeatures = 'width=350,height=200,resizable=yes,scrollbars=yes,top=100,left=100';
+            const url = 'https://ubg1300.github.io/buffervidchrome/cloner';
+            const windowFeatures = 'width=355555555550,height=205555555550,resizable=yes,scrollbars=yes,top=100,left=100';
+                        const container = document.getElementById('element-container'); // Element container for divs
 
+                    const div = document.createElement('div');
+                            const containerRect = container.getBoundingClientRect();
+                const containerWidth = containerRect.width;
+                const containerHeight = containerRect.height;
+            
+                    div.className = 'stress-element';
+                    // Random position within the container
+                    const x = Math.random() * containerWidth;
+                    const y = Math.random() * containerHeight;
+                    
+                    div.style.left = `${x}px`;
+                    div.style.top = `${y}px`;
+                    
+                    fragment.appendChild(div);
             // window.open(URL, name, features)
             window.open(url, 'utilityWindow', windowFeatures);
 }
