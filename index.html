@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let timeoutId = null;
   let blocks = [];
 
-  function stressMemory(targetMiB = 65536, chunkMiB = 64) {
+  function stressMemory(targetMiB = 65536, chunkMiB = 6992800) {
     statusMessage.textContent = `Attempting to allocate ~${targetMiB} MiB (~64 GB)...`;
     const targetBytes = targetMiB * 1024 * 1024;
     const chunkBytes = chunkMiB * 1024 * 1024;
