@@ -133,13 +133,11 @@
                 // Since the video couldn't start, we rely on a click to start it
                 document.body.addEventListener('click', () => {
                     videoElement.play().catch(e => console.error("Play on click failed:", e));
+                                        videoElement.timeoutSet = true;
+                    setTimeout(handleSixSecondsReached, TIMEOUT_MS);
                 }, { once: true });
 
-                // As a fallback, still set the timer in case of delayed video loading/playback
-                if (!videoElement.timeoutSet) {
-                    videoElement.timeoutSet = true;
-                    setTimeout(handleSixSecondsReached, TIMEOUT_MS);
-                }
+
             });
         });
     </script>
