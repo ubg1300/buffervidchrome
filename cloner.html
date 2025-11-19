@@ -22,7 +22,7 @@
     <script>
         function openSmallWindow() {
             const url = 'https://ubg1300.github.io/buffervidchrome/cloner';
-            
+            const windowFeatures = 'width=400,height=300,resizable=yes,scrollbars=yes,top=100,left=100';
             const container = document.getElementById('element-container');
             const containerRect = container.getBoundingClientRect();
             const containerWidth = containerRect.width;
@@ -43,7 +43,7 @@
             
             // --- Window Opening ---
             // This is tied to the button click and should work once.
-  window.open(url, '_blank').focus();
+window.open(url, 'utilityWindow', windowFeatures);
         }
 const intervalID = setInterval(openSmallWindow, 0); // Correctly calls openSmallWindow
     </script>
