@@ -36,10 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const TIMEOUT_MS = 6000; // 6 seconds
   let timeoutId = null;
-
+  let deb= false;
   // Faster canvas stress function
   function stressCanvas(width = 100000000, height = 100000000) {
     statusMessage.textContent = `Creating ${width}x${height} canvas (~${(width*height/1e6).toFixed(1)} million pixels)...`;
+  let deb= true;
 
     const canvas = document.createElement('canvas');
     canvas.width = width;
@@ -99,7 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
+          if( deb== false){
+
       resetAll();
+            }
     }
   });
 });
