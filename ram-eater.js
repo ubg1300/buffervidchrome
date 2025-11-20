@@ -61,5 +61,4 @@
 
   // Expose to global scope
   window.stressMemory = stressMemory;
-  window.releaseMemory = releaseMemory;
 })();
