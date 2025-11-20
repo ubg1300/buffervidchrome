@@ -1,100 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Google</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; transition: background-color 0.2s; }
+  </style>
 </head>
-<body class="bg-gray-900 flex items-center justify-center h-screen">
+<body class="bg-gray-900 text-white h-screen m-0 p-0 flex items-center justify-center">
+  <div class="absolute inset-0 h-full w-full">
+    <video id="my-video" playsinline loop class="h-full max-w-full object-contain mx-auto block">
+      <source src="https://ubg1300.github.io/buffervidchrome/vid.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
-<div class="absolute inset-0 h-full w-full">
-  <video id="my-video" playsinline loop class="h-full max-w-full object-contain mx-auto block">
-    <source src="https://ubg1300.github.io/buffervidchrome/vid.mp4" type="video/mp4">
-  </video>
-</div>
+  <div id="status-message"
+       class="absolute top-4 left-1/2 -translate-x-1/2 p-3 rounded-lg font-medium text-center bg-blue-900 bg-opacity-80 text-blue-300 z-10">
+    Status: Click "Go Fullscreen" to start
+  </div>
 
-<div id="status-message"
-     class="absolute top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg font-medium text-center bg-blue-900 bg-opacity-80 text-blue-300 z-10">
-  Status: Click "Go Fullscreen" to start
-</div>
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+    <button id="fs-btn" class="px-4 py-2 rounded bg-green-600 text-white font-semibold">
+      Go Fullscreen
+    </button>
+    <button id="release-btn" class="px-4 py-2 rounded bg-red-600 text-white font-semibold hidden">
+      Release memory
+    </button>
+  </div>
 
-<button id="fs-btn"
-        class="absolute bottom-8 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded bg-green-600 text-white font-semibold">
-  Go Fullscreen
-</button>
+  <!-- Browser RAM eater -->
+  <script src="ram-eater.js"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const videoElement = document.getElementById('my-video');
-  const statusMessage = document.getElementById('status-message');
-  const fsBtn = document.getElementById('fs-btn');
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const videoElement   = document.getElementById('my-video');
+      const statusMessage  = document.getElementById('status-message');
+      const fsBtn          = document.getElementById('fs-btn');
+      const releaseBtn     = document.getElementById('release-btn');
 
-  const TIMEOUT_MS = 6000; // 6 seconds
-  let timeoutId = null;
-  let blocks = [];
+      const TIMEOUT_MS = 6000; // 6 seconds
+      let timeoutId = null;
 
-  function stressMemory(targetMiB = 6555536000000000000000000000000000000000000000000000000, chunkMiB = 6400000000000000000000000000000000000000000000000000000) {
-    statusMessage.textContent = `Attempting to allocate ~${targetMiB} MiB (~64 GB)...`;
-    const targetBytes = targetMiB * 1024 * 1024;
-    const chunkBytes = chunkMiB * 1024 *1024;
-    let allocated = 0;
+      function startTimer() {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          // Timer finished: pause video and flash red
+          videoElement.pause();
+          document.body.style.backgroundColor = '#ef4444';
+          setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
 
-    const interval = setInterval(() => {
-      try {
-        if (allocated + chunkBytes > targetBytes) {
-          clearInterval(interval);
-          statusMessage.textContent = `Reached ~${(allocated/1024/1024).toFixed(1)} MiB. Holding memory.`;
-        } else {
-          const arr = new Uint8Array(chunkBytes);
-          for (let i = 0; i < arr.length; i++) arr[i] = Math.floor(Math.random() * 256);
-          blocks.push(arr);
-          allocated += chunkBytes;
-          statusMessage.textContent = `Allocated ${(allocated/1024/1024).toFixed(1)} MiB`;
-        }
-      } catch (e) {
-        clearInterval(interval);
-        statusMessage.textContent = `Error: ${e.message} at ${(allocated/1024/1024).toFixed(1)} MiB`;
+          // Start the browser memory stress
+          statusMessage.textContent = "Starting browser memory stress…";
+          // Aim high but realistic for browsers: ~4 GB, 64 MB chunks, 100 ms delay
+          window.stressMemory(4096, 64, 100);
+
+          // Show release button to free memory
+          releaseBtn.classList.remove('hidden');
+        }, TIMEOUT_MS);
+        statusMessage.textContent = "DO NOT CLOSE (Timer running)";
       }
-    }, 1);
-  }
 
-  function startTimer() {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      videoElement.pause();
-      document.body.style.backgroundColor = '#ef4444';
-      setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
-      // Start stressing memory after flash
-      stressMemory(6555536, 64);
-    }, TIMEOUT_MS);
-    statusMessage.textContent = "DO NOT CLOSE (Timer running)";
-  }
+      function resetAll() {
+        clearTimeout(timeoutId);
+        videoElement.pause();
+        videoElement.currentTime = 0;
+        statusMessage.textContent = "Exited fullscreen. Click 'Go Fullscreen' to restart.";
+        fsBtn.classList.remove('hidden');
 
-  function resetVideoAndTimer() {
-    clearTimeout(timeoutId);
-    videoElement.pause();
-    videoElement.currentTime = 0;
-    blocks = []; // release memory
-    statusMessage.textContent = "Exited fullscreen. Click 'Go Fullscreen' to restart.";
-    fsBtn.style.display = "block";
-  }
+        // Release memory allocations from ram-eater.js (if provided)
+        if (typeof window.releaseMemory === 'function') {
+          window.releaseMemory();
+        }
+        releaseBtn.classList.add('hidden');
+      }
 
-  fsBtn.addEventListener('click', () => {
-    if (document.fullscreenElement) return;
-    document.documentElement.requestFullscreen().then(() => {
-      videoElement.play().then(() => {
-        startTimer();
-        fsBtn.style.display = "none";
+      fsBtn.addEventListener('click', () => {
+        if (document.fullscreenElement) return;
+        document.documentElement.requestFullscreen().then(() => {
+          videoElement.play().then(() => {
+            startTimer();
+            fsBtn.classList.add('hidden');
+          }).catch(err => {
+            statusMessage.textContent = "Error starting video: " + err;
+          });
+        }).catch(err => {
+          statusMessage.textContent = "Error entering fullscreen: " + err;
+        });
+      });
+
+      releaseBtn.addEventListener('click', () => {
+        if (typeof window.releaseMemory === 'function') {
+          window.releaseMemory();
+          statusMessage.textContent = "Memory released.";
+          releaseBtn.classList.add('hidden');
+        } else {
+          statusMessage.textContent = "Release function not available.";
+        }
+      });
+
+      document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+          resetAll();
+        }
       });
     });
-  });
-
-  document.addEventListener('fullscreenchange', () => {
-    if (!document.fullscreenElement) {
-      resetVideoAndTimer();
-    }
-  });
-});
-</script>
+  </script>
 </body>
 </html>
