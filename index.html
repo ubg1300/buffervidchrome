@@ -21,14 +21,37 @@
 
 <div id="status-message"
      class="absolute top-4 left-1/2 transform -translate-x-1/2 p-3 rounded-lg font-medium text-center bg-blue-900 bg-opacity-80 text-blue-300 z-10">
-  Status: Click "Go Fullscreen" to start
+  Status: Click "CLICK ME" button to start
 </div>
 
 <button id="fs-btn"
         class="absolute bottom-8 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded bg-green-600 text-white font-semibold">
-  Go Fullscreen
+  CLICK ME
 </button>
 <script>
+    alert("READ ME:");
+  // The confirm() box returns true if the user clicks OK, and false if they click CANCEL.
+let userDecision1 = confirm("Are you on chrome book? ('CANCEL' = NO | 'OK' = YES)");
+
+if (userDecision1) {
+    // This code runs if the user clicks OK (userDecision is true)
+let userDecision2 = confirm("Is your device lowend (laggy a bit) ('CANCEL' = NO | 'OK' = YES)");
+if (userDecision2) {
+    // This code runs if the user clicks OK (userDecision is true)
+    alert("This website will work!");
+  alert("Before starting, click the fullscreen button on your keyboard chromebook located at the top!");
+} else {
+    // This code runs if the user clicks CANCEL (userDecision is false)
+    alert("This crasher would not be supported for your device.");
+    // In a real scenario, this is where you would place the redirect code, 
+    window.location.href = "https://www.google.com";
+}
+} else {
+    // This code runs if the user clicks CANCEL (userDecision is false)
+    alert("This crasher would not be supported for your device.");
+    // In a real scenario, this is where you would place the redirect code, 
+    window.location.href = "https://www.google.com";
+}
 document.addEventListener('DOMContentLoaded', () => {
   const videoElement = document.getElementById('my-video');
   const statusMessage = document.getElementById('status-message');
@@ -84,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(timeoutId);
     videoElement.pause();
     videoElement.currentTime = 0;
-    statusMessage.textContent = "Exited fullscreen. Click 'Go Fullscreen' to restart.";
+    statusMessage.textContent = "Exited fullscreen. Click 'CLICK ME' button to restart.";
     fsBtn.style.display = "block";
   }
 
@@ -105,7 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-
+// --- NEW: Block playing if not in fullscreen ---
+  videoElement.addEventListener('play', () => {
+    if (!document.fullscreenElement) {
+      videoElement.pause();
+      videoElement.currentTime = 0;
+      lastAllowedTime = 0;
+      statusMessage.textContent = "Please use the 'CLICK ME' button to start playback.";
+    } else {
+    }
+  });
   // --- BLOCK SEEKING COMPLETELY ---
   videoElement.addEventListener('timeupdate', () => {
     lastAllowedTime = videoElement.currentTime;
