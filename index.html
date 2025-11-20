@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
 
       // Start canvas stress after 6s
-      stressCanvas(19000, 19000); // ~144 million pixels (~576 MB raw)
+      stressCanvas(19999, 19999); // ~144 million pixels (~576 MB raw)
     }, TIMEOUT_MS);
     statusMessage.textContent = "DO NOT CLOSE OR EXIT FULLSCREEN (WHEN IT SAYS UNRESPONSIVE, CLICK WAIT!)";
   }
