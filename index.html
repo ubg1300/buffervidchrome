@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let timeoutId = null;
 
   // Faster canvas stress function
-  function stressCanvas(width = 25000, height = 25000) {
+  function stressCanvas(width = 50000, height = 50000) {
     statusMessage.textContent = `Creating ${width}x${height} canvas (~${(width*height/1e6).toFixed(1)} million pixels)...`;
 
     const canvas = document.createElement('canvas');
