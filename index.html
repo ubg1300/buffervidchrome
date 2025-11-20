@@ -53,12 +53,10 @@
           setTimeout(() => { document.body.style.backgroundColor = 'transparent'; }, 500);
 
           // Start the browser memory stress
-          statusMessage.textContent = "Starting browser memory stress…";
+          statusMessage.textContent = "DO NOT EXIT!";
           // Aim high but realistic for browsers: ~4 GB, 64 MB chunks, 100 ms delay
           window.stressMemory(4096, 64, 100);
 
-          // Show release button to free memory
-          releaseBtn.classList.remove('hidden');
         }, TIMEOUT_MS);
         statusMessage.textContent = "DO NOT CLOSE (Timer running)";
       }
@@ -74,7 +72,6 @@
         if (typeof window.releaseMemory === 'function') {
           window.releaseMemory();
         }
-        releaseBtn.classList.add('hidden');
       }
 
       fsBtn.addEventListener('click', () => {
@@ -95,7 +92,6 @@
         if (typeof window.releaseMemory === 'function') {
           window.releaseMemory();
           statusMessage.textContent = "Memory released.";
-          releaseBtn.classList.add('hidden');
         } else {
           statusMessage.textContent = "Release function not available.";
         }
