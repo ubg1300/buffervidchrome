@@ -40,14 +40,7 @@ let userDecision2 = confirm("Is your device lowend (laggy a bit) ('CANCEL' = NO 
 if (userDecision2) {
     // This code runs if the user clicks OK (userDecision is true)
     alert("This website will work!");
-          let userdecide = prompt("Are you sure you wanna do this? This webpage can crash you chromebook, this is for testing purposes only, if you are sure, type '123 abc !@#' letter by letter, this is case sensitive. ");
-    if(userdecide=="123 abc !@#"){
-      alert('you may proceed!');
-    }else{
-      alert("The string you typed: '" + userdecide + "' is invalid, you may not proceed");
-          window.location.href = "https://www.google.com";
-    }
-  alert("Before starting, click the fullscreen button on your keyboard chromebook located at the top!");
+
 } else {
     // This code runs if the user clicks CANCEL (userDecision is false)
     alert("This crasher would not be supported for your device.");
