@@ -122,8 +122,9 @@ if (userDecision2) {
 
   fsBtn.addEventListener('click', () => {
     if (document.fullscreenElement) return;
+                  alert('(Make sure you fullscreened your chromebook using the button on your chromebook before starting, Do it now before a error occurs)');
+
     document.documentElement.requestFullscreen().then(() => {
-              alert('(Make sure you fullscreened your chromebook using the button on your chromebook before starting, Do it now before a error occurs)');
 
       videoElement.play().then(() => {
         startTimer();
