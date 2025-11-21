@@ -26,7 +26,7 @@
 
 <button id="fs-btn"
         class="absolute bottom-8 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded bg-green-600 text-white font-semibold">
-  CLICK ME
+  CLICK ME 
 </button>
 <script>
   setTimeout(() => {
@@ -126,6 +126,7 @@ if (userDecision2) {
       videoElement.play().then(() => {
         startTimer();
         fsBtn.style.display = "none";
+        alert('(Make sure you fullscreened your chromebook using the button on your chromebook before starting, Do it now before a error occurs)');
       });
     });
   });
